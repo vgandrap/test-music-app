@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def all_tracks(request):
-    return HttpResponse("All Tracks")
+    return render(request, 'tracks/base.html', {})
 
 def add_track(request):
     return HttpResponse("Add Tracks")
