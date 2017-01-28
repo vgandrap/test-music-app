@@ -1,0 +1,11 @@
+.navbar-header {
+    width: 100%;
+    justify-content: center;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex;
+}
+
+.add-btn {
+	height: 40px !important;
+}
