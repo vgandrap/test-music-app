@@ -17,7 +17,7 @@ class Track(models.Model):
 	title = models.CharField(max_length=200)
 	rating = models.FloatField()
 	# rating = models.DecimalField(max_digits=1, decimal_places=1)
-	genre = models.ForeignKey(Genre, to_field="genre_id")
+	genre = models.ManyToManyField(Genre)
 
 	def __str__(self):
 		return self.title
