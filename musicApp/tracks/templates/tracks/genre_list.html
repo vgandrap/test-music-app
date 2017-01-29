@@ -1,0 +1,55 @@
+<div class="panel-group" id="accordion" role="tablist">
+    {% for genre in genres %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
+            <div class="row">
+                <div class="col-md-8 col-xs-6">
+                    <h4 class="panel-title">
+                        {{ genre.genre_type }}
+                    </h4>
+                </div>
+                <div class="col-md-4 col-xs-6">
+                    <button class="btn btn-block btn-warning">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!-- Pagination -->
+<div class="row">
+    <div class="col-md-12 col-xs-16">
+        <nav aria-label="Page navigation">
+            {% if genres.has_other_pages %}
+            <ul class="pagination">
+                {% if genres.has_previous %}
+                <li>
+                    <span class="genre-paginate" data-href="{{ genres.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&laquo;</span>
+                </li>
+                {% endif %} {% for i in genres.paginator.page_range %} {% if genres.number == i %}
+                <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span>
+                </li>
+                {% else %}
+                <li><span class="genre-paginate" data-href="{{ i }}">{{ i }}</span></li>
+                {% endif %} {% endfor %} {% if genres.has_next %}
+                <li>
+                    <span class="genre-paginate" data-href="{{ genres.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </nav>
+    </div>
+</div>

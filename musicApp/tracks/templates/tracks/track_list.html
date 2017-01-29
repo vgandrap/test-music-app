@@ -1,11 +1,12 @@
 <div class="panel-group" id="accordion" role="tablist">
+    {% for track in tracks %}
     <div class="panel panel-default">
-        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
+        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}" >
             <h4 class="panel-title">
-                Cras justo odio
+                {{ track.title }}
             </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel">
+        <div id="collapse{{ forloop.counter0 }}" class="panel-collapse collapse {% if forloop.counter == 1 %}in{% endif %}" role="tabpanel">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-8 col-xs-16">
@@ -14,7 +15,7 @@
                                 Genre
                             </div>
                             <div class="col-md-10 col-xs-8">
-                                Genre Value
+                                {{ track.genre.genre_type }}
                             </div>
                         </div>
                         <div class="row">
@@ -22,7 +23,7 @@
                                 Rating
                             </div>
                             <div class="col-md-10 col-xs-8">
-                                <input type="number" name="rating-input-1" id="rating-input-1" value="3.6" data-min="1" data-max="5" data-step="0.1" data-size='xs' data-display-only="true" data-hover-enabled="true" class="rating">
+                                <input type="number" name="rating-input-{{ forloop.counter }}" id="rating-input-{{ forloop.counter }}" value="{{ track.rating }}" data-min="0" data-max="10" data-step="0.2" data-size='xs' data-display-only="true" data-hover-enabled="true" class="rating">
                             </div>
                         </div>
                     </div>
@@ -31,7 +32,7 @@
                             <div class="col-md-4 col-xs-2">
                             </div>
                             <div class="col-md-8 col-xs-12">
-                                <button class="btn btn-block btn-default">Edit</button>
+                                <button class="btn btn-block btn-warning">Edit</button>
                             </div>
                         </div>
                     </div>
@@ -39,68 +40,45 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-heading" role="button" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">
-            <h4 class="panel-title">
-                Dapibus ac facilisis in
-            </h4>
-        </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-8 col-xs-16">
-                        <div class="row">
-                            <div class="col-md-2 col-xs-4">
-                                Genre
-                            </div>
-                            <div class="col-md-10 col-xs-8">
-                                Genre Value
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 col-xs-4">
-                                Rating
-                            </div>
-                            <div class="col-md-10 col-xs-8">
-                                <input type="number" name="rating-input-2" id="rating-input-2" value="3.6" data-min="1" data-max="5" data-step="0.1" data-size='xs' data-display-only="true" data-hover-enabled="true" class="rating">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-xs-16">
-                        <div class="row">
-                            <div class="col-md-4 col-xs-2">
-                            </div>
-                            <div class="col-md-8 col-xs-12">
-                                <button class="btn btn-block btn-default">Edit</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 <!-- Pagination -->
 <div class="row">
     <div class="col-md-12 col-xs-16">
         <nav aria-label="Page navigation">
+            {% if tracks.has_other_pages %}
             <ul class="pagination">
+                {% if tracks.has_previous %}
                 <li>
-                    <a href="#" aria-label="Previous">
+                    <span class="track-paginate" data-href="{{ tracks.previous_page_number }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
-                    </a>
+                    </span>
                 </li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&laquo;</span>	
+                </li>
+                {% endif %}
+                {% for i in tracks.paginator.page_range %}
+      			{% if tracks.number == i %}
+                <li class="active"><span>{{ i }}<span class="sr-only">(current)</span></span></li>
+                {% else %}
+                <li><span class="track-paginate" data-href="{{ i }}">{{ i }}</span></li>
+                {% endif %}
+                {% endfor %}
+                {% if tracks.has_next %}
                 <li>
-                    <a href="#" aria-label="Next">
+                    <span class="track-paginate" data-href="{{ tracks.next_page_number }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    </span>
                 </li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&raquo;</span>	
+                </li>
+                {% endif %}
             </ul>
+            {% endif %}
         </nav>
     </div>
 </div>

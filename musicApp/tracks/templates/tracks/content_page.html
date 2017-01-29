@@ -1,17 +1,23 @@
+{% extends 'tracks/base.html' %} {% load staticfiles %} {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-xs-1">
         </div>
         <div class="col-md-4 col-xs-12">
             <ul class="nav nav-pills nav-justified">
-                <li role="presentation" class="active"><a href="#">Tracks</a></li>
-                <li role="presentation"><a href="#">Genres</a></li>
+                <li role="presentation" class="active track"><a class="track-nav" href="#">Tracks</a></li>
+                <li role="presentation" class="genre"><a class="genre-nav" href="#">Genres</a></li>
             </ul>
         </div>
         <div class="col-md-4 col-xs-12">
-            <button class="btn btn-info btn-block add-btn" type="button">Add New Track</button>
+            <button class="btn btn-info btn-block add-btn genre_track_btn show" type="button">Add New Track</button>
+            <button class="btn btn-primary btn-block add-btn genre_track_btn hidden invisible" type="button">Add New Genre</button>
         </div>
     </div>
     <hr/> {% include 'tracks/search_bar.html' %}
-    <hr/> {% include 'tracks/track_list.html' %}
+    <hr/>
+    <div id="siteloader" class="content"></div>
 </div>
+{% endblock %} 
+{% block inline_js %}
+{% endblock %}

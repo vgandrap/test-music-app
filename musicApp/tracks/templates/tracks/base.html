@@ -29,13 +29,16 @@
 <body>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    
-    {% include 'tracks/navbar.html' %}
-    {% include 'tracks/content_page.html' %}    
-
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified bootstrap JavaScript -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    
+    {% include 'tracks/navbar.html' %}
+
+    {% block content %} {% endblock %}
+
+    {% block inline_js %} {% endblock %}
+
     <!-- Custom JS -->
     <script src="{% static 'js/global.js' %}"></script>
     <!-- Star Rating -->
