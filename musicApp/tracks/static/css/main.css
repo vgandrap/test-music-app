@@ -9,3 +9,7 @@
 .add-btn {
 	height: 40px !important;
 }
+
+.btn-block + .btn-block {
+     margin-top: 0px !important; 
+}
