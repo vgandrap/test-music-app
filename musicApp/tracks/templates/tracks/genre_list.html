@@ -1,21 +1,17 @@
-<div class="panel-group" id="accordion" role="tablist">
+<ul class="list-group">
     {% for genre in genres %}
-    <div class="panel panel-default">
-        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
-            <div class="row">
-                <div class="col-md-8 col-xs-6">
-                    <h4 class="panel-title">
-                        {{ genre.genre_type }}
-                    </h4>
-                </div>
-                <div class="col-md-4 col-xs-6">
-                    <button class="btn btn-block btn-warning" type="button" data-toggle="modal" data-target="#edit_genres_modal">Edit</button>
-                </div>
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-10 col-xs-6 genre-name">
+                {{ genre.genre_type }}
+            </div>
+            <div class="col-md-2 col-xs-6">
+                <button class="btn btn-block btn-warning genre-edit-btn" type="button" data-toggle="modal" data-target="#edit_genres_modal">Edit</button>
             </div>
         </div>
-    </div>
+    </li>
     {% endfor %}
-</div>
+</ul>
 <!-- Pagination -->
 <div class="row">
     <div class="col-md-12 col-xs-16">
