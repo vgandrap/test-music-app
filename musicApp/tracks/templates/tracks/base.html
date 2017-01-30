@@ -32,7 +32,15 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified bootstrap JavaScript -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    
+
+    <!-- Modals -->
+    {% include 'tracks/modal/add_track_modal.html' %}
+    {% include 'tracks/modal/edit_track_modal.html' %}
+    {% include 'tracks/modal/add_genre_modal.html' %}
+    {% include 'tracks/modal/edit_genre_modal.html' %}
+    {% include 'tracks/modal/search_result_modal.html' %}
+
+    <!-- Navbar -->
     {% include 'tracks/navbar.html' %}
 
     {% block content %} {% endblock %}
