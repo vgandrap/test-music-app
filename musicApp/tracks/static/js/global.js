@@ -1,3 +1,8 @@
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
 function loadTracks(data = 1) {
     $.get("/track_list/", { "page": data }).done(function(data) {
         $('#siteloader').html(data);
@@ -96,6 +101,15 @@ $("form.tracks").submit(function(e) {
 
     data['track_genre'] = track_genre;
 
+    csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
     $.ajax({
         url: ajax_url,
         type: 'POST',
@@ -118,6 +132,16 @@ $("form.genres").submit(function(e) {
     } else {
         ajax_url = '/genre/add';
     }
+    csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
     $.ajax({
         url: ajax_url,
         type: 'POST',
