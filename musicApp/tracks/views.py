@@ -288,7 +288,7 @@ def edit_genre(request, genre_id):
 
 
 def get_genres(url='http://104.197.128.152:8000/v1/genres'):
-    r = get(url)
+    r = requests.get(url)
     genres = r.json()
 
     for genre in genres['results']:
@@ -299,7 +299,7 @@ def get_genres(url='http://104.197.128.152:8000/v1/genres'):
 
 
 def get_tracks(url='http://104.197.128.152:8000/v1/tracks'):
-    r = get(url)
+    r = requests.get(url)
     songs = r.json()
 
     for song in songs['results']:
