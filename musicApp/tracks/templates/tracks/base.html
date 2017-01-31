@@ -23,7 +23,6 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <!-- Star Rating -->
     <link href="{% static 'rating/css/star-rating.min.css' %}" rel="stylesheet" />
-
 </head>
 
 <body>
@@ -32,26 +31,38 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified bootstrap JavaScript -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-
     <!-- Modals -->
-    {% include 'tracks/modal/add_track_modal.html' %}
-    {% include 'tracks/modal/edit_track_modal.html' %}
-    {% include 'tracks/modal/add_genre_modal.html' %}
-    {% include 'tracks/modal/edit_genre_modal.html' %}
-    {% include 'tracks/modal/search_result_modal.html' %}
-
+    {% include 'tracks/modal/track_modal.html' %}
+    {% include 'tracks/modal/genre_modal.html' %}
+    <div class="search_container">
+        {% include 'tracks/modal/search_result_modal.html' %}
+    </div>
     <!-- Navbar -->
-    {% include 'tracks/navbar.html' %}
-
-    {% block content %} {% endblock %}
-
-    {% block inline_js %} {% endblock %}
-
+    {% include 'tracks/navbar.html' %} 
+    {% block content %} 
+    {% endblock %}
     <!-- Custom JS -->
     <script src="{% static 'js/global.js' %}"></script>
     <!-- Star Rating -->
     <script src="{% static 'rating/js/star-rating.min.js' %}"></script>
+    <script type="text/javascript">
+    $('button.search-button').on('click', function() {
+        var button = $(this);
+        query = button.parent().siblings('input').val();
+        if (!query) {
+            alert('Search String cannot be empty');
+        } else {
+            $('.search_container').empty().load("{% url 'track_search' %}?query=" + query, function(){
+	            $('#search_result_modal').modal()
+    	        $('input.rating').rating();
+            });
 
+            // });
+        }
+    });
+    </script>
+    {% block inline_js %} 
+    {% endblock %}
 </body>
 
 </html>

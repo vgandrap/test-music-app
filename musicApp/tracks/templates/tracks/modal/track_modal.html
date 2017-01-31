@@ -1,0 +1,42 @@
+<div class="modal fade" id="tracks_modal" tabindex="-1" role="dialog" aria-labelledby="track_label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="track_label">Add/Edit Track</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal tracks">
+                {% csrf_token %}
+                    <input type="hidden" class="form-control" name="track-id" id="track-id" value="0">
+                    <div class="form-group">
+                        <label for="track-title" class="col-sm-2 control-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="track-title" name="track-title" placeholder="Title">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="track-rating" class="col-sm-2 control-label">Rating</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="track-rating" name="track-rating" placeholder="Rating" step="any" min=0>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="track-genre" class="col-sm-2 control-label">Genres</label>
+                        <div class="col-sm-10">
+                            <select id="track-genre" name="track-genre" multiple class="form-control">
+                                {% for genre in genre_list %}
+                                <option value="{{ genre.genre_id }}">{{ genre.genre_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="form-control btn btn-primary save-new-track">Save changes</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

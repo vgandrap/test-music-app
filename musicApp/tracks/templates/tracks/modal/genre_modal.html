@@ -1,0 +1,26 @@
+<div class="modal fade" id="genres_modal" tabindex="-1" role="dialog" aria-labelledby="genre_label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="genre_label">Add/Edit Genre</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal genres">
+                {% csrf_token %}
+                    <input type="hidden" class="form-control" name="genre-id" id="genre-id" value="0">
+                    <div class="form-group">
+                        <label for="genre-label" class="col-sm-2 control-label">Genre</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="genre-label" name="genre-label" placeholder="Genre">
+                        </div>
+                    </div>
+                    <button type="submit" class="form-control btn btn-primary save-new-genre">Save changes</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

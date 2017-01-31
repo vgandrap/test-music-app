@@ -42,12 +42,20 @@
                             <div class="col-md-4 col-xs-2">
                             </div>
                             <div class="col-md-8 col-xs-12">
-                                <button class="btn btn-block btn-warning track-edit-btn" type="button" data-toggle="modal" data-target="#edit_tracks_modal">Edit</button>
+                                <button id="track_edit_{{ track.title_id }}" class="btn btn-block btn-warning track-edit-btn" type="button" data-toggle="modal" data-target="#tracks_modal" data-track-id="{{ track.title_id }}">Edit</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
+            <h4 class="panel-title track-title">
+                No tracks found
+            </h4>
         </div>
     </div>
     {% endfor %}

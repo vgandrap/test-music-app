@@ -6,7 +6,7 @@
                 {{ genre.genre_type }}
             </div>
             <div class="col-md-2 col-xs-6">
-                <button class="btn btn-block btn-warning genre-edit-btn" type="button" data-toggle="modal" data-target="#edit_genres_modal">Edit</button>
+                <button id="genre_edit_{{ genre.genre_id }}" class="btn btn-block btn-warning genre-edit-btn" type="button" data-toggle="modal" data-target="#genres_modal" data-genre-id="{{ genre.genre_id }}">Edit</button>
             </div>
         </div>
     </li>
