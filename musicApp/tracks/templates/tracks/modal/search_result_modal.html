@@ -24,7 +24,7 @@
                                             </div>
                                             <div class="col-md-10 col-xs-10">
                                                 <ul class="list-group track-list">
-                                                    {% for gen in track.genre.all %}
+                                                    {% for gen in track.genre %}
                                                     <li class="list-group-item track-list">{{ gen.genre_type }}</li>
                                                     {% empty %}
                                                     <li class="list-group-item track-list">Sorry, no genres assigned.</li>
