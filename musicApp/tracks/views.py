@@ -9,8 +9,8 @@ import json
 
 
 def home(request):
-    # get_genres()
-    # get_tracks()
+    get_genres()
+    get_tracks()
     track_list = Track.objects.all()
     genre_list = Genre.objects.all()
 
