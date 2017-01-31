@@ -83,9 +83,63 @@ $('#genres_modal').on('show.bs.modal', function(event) {
     }
 })
 
+$("form.tracks").submit(function(e) {
+    var form = $(this);
+    var ajax_url = '';
+    data = {
+        track_title: $('#track-title').val(),
+        track_rating: $('#track-rating').val(),
+    }
+    if ($('#track-id').val() != 0) {
+        data['track_id'] = $('#track-id').val(),
+            ajax_url = '/' + $('#track-id').val() + '/edit';
+    } else {
+        ajax_url = '/add';
+    }
 
+    var track_genre = []
+    if ($('select#track-genre').val() != null) {
+        track_genre = $('select#track-genre option:selected').map(function() {
+            return { value: this.text, id: this.value }
+        }).get()
+    }
+
+    data['track_genre'] = track_genre;
+
+    $.ajax({
+        url: ajax_url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(data), // data to be submitted
+    });
+    return false;
+});
+
+$("form.genres").submit(function(e) {
+    var form = $(this);
+    var ajax_url = '';
+    data = {
+        genre_type: $('#genre-label').val(),
+    }
+    if ($('#genre-id').val() != 0) {
+        data['genre_id'] = $('#genre-id').val(),
+            ajax_url = '/genre/' + $('#genre-id').val() + '/edit';
+    } else {
+        ajax_url = '/genre/add';
+    }
+    $.ajax({
+        url: ajax_url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: JSON.stringify(data), // data to be submitted
+    });
+    return false;
+});
+
+$(function() {
     $('input.rating').rating();
-
     loadTracks();
     $('[data-toggle="tooltip"]').tooltip()
 });
