@@ -2,7 +2,7 @@ function loadTracks(data = 1) {
     $.get("/track_list/", { "page": data }).done(function(data) {
         $('#siteloader').html(data);
         $('input.rating').rating();
-    $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip()
     });
 }
 
@@ -10,7 +10,7 @@ function loadGenres(data = 1) {
     $.get("/genre/", { "page": data }).done(function(data) {
         $('#siteloader').html(data);
         $('input.rating').rating();
-    $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="tooltip"]').tooltip()
     });
 }
 
