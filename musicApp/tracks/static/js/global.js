@@ -24,7 +24,6 @@ $(document).on('click', 'span.genre-paginate', function() {
     loadGenres($(this).data('href'));
 });
 
-// $("ul.nav.nav-pills li").each(function() {
 $(document).on('click', "ul.nav.nav-pills li", function() {
     $("ul.nav.nav-pills li").each(function() {
         $(this).toggleClass("active");
@@ -61,15 +60,6 @@ $('#tracks_modal').on('show.bs.modal', function(event) {
     }
 })
 
-    // Toggle Navbar Active Links
-    // $("ul.nav.navbar-nav li").each(function() {
-    //     $(this).on('click', function() {
-    //         $("ul.nav.navbar-nav li").each(function() {
-    //             $(this).removeClass("active");
-    //         });
-    //         $(this).addClass("active");
-    //     });
-    // });
 $('#genres_modal').on('show.bs.modal', function(event) {
     var modal = $(this)
     $(this).find('input.form-control').val('')
