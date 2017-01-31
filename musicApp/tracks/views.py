@@ -88,6 +88,7 @@ def track_search(request):
     search_url = 'http://104.197.128.152:8000/v1/tracks?title=' + query
 
     r = get(search_url)
+    r = requests.get(search_url)
     results = r.json()
 
     track_results = []
