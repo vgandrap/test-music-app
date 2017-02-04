@@ -113,8 +113,6 @@ $("form.tracks").submit(function(e) {
     $.ajax({
         url: ajax_url,
         type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
         data: JSON.stringify(data), // data to be submitted
     });
     return false;
@@ -145,8 +143,6 @@ $("form.genres").submit(function(e) {
     $.ajax({
         url: ajax_url,
         type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
         data: JSON.stringify(data), // data to be submitted
     });
     return false;

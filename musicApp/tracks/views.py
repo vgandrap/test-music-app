@@ -4,12 +4,11 @@ from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Genre, Track
 import urllib
-from requests import get
 import json
 
 
 def home(request):
-    get_genres()
+    # get_genres()
     get_tracks()
     track_list = Track.objects.all()
     genre_list = Genre.objects.all()
@@ -58,17 +57,19 @@ def add_track(request):
                 headers=json_headers
             )
 
-            if json_response['reason']:
-                response_to_frontend['message'] = json_response['reason']
-            if json_response['status_code']:
-                response_to_frontend['status_code'] = json_response['status_code']
-            if json_response['id']:
-                response_to_frontend['id'] = json_response['id']
-                obj, created = Track.objects.update_or_create(title_id=json_response['id'], title=json_data['title'],
-                                                              rating=json_data['rating'])
-                if json_data['genres']:
-                    for genre_item in json_data['genres']:
-                        obj.genre.add(Genre.objects.get(genre_id=genre_item['id']))
+            if json_response.status_code == 200:
+                response_to_frontend['status_code'] = json_response.status_code
+                json_object = json_response.json()
+
+                if json_object.get('reason'):
+                    response_to_frontend['message'] = json_object['reason']
+                if json_object.get('id'):
+                    response_to_frontend['id'] = json_object['id']
+                    obj, created = Track.objects.update_or_create(title_id=json_object['id'], title=json_data['title'],
+                                                                  rating=json_data['rating'])
+                    if json_data['genres']:
+                        for genre_item in json_data['genres']:
+                            obj.genre.add(Genre.objects.get(genre_id=genre_item['id']))
 
         except:
             pass
@@ -156,17 +157,19 @@ def edit_track(request, track_id):
                 headers=json_headers
             )
 
-            if json_response['reason']:
-                response_to_frontend['message'] = json_response['reason']
-            if json_response['status_code']:
-                response_to_frontend['status_code'] = json_response['status_code']
-            if json_response['id']:
-                response_to_frontend['id'] = json_response['id']
-                obj, created = Track.objects.update_or_create(title_id=json_data['id'], title=json_data['title'],
-                                                              rating=json_data['rating'])
-                if json_data['genres']:
-                    for genre_item in json_data['genres']:
-                        obj.genre.add(Genre.objects.get(genre_id=genre_item['id']))
+            if json_response.status_code == 200:
+                response_to_frontend['status_code'] = json_response.status_code
+                json_object = json_response.json()
+
+                if json_object.get('reason'):
+                    response_to_frontend['message'] = json_object['reason']
+                if json_object.get('id'):
+                    response_to_frontend['id'] = json_object['id']
+                    obj, created = Track.objects.update_or_create(title_id=json_data['id'], title=json_data['title'],
+                                                                  rating=json_data['rating'])
+                    if json_data['genres']:
+                        for genre_item in json_data['genres']:
+                            obj.genre.add(Genre.objects.get(genre_id=genre_item['id']))
 
         except:
             pass
@@ -218,13 +221,15 @@ def add_genre(request):
                 headers=json_headers
             )
 
-            if json_response['reason']:
-                response_to_frontend['message'] = json_response['reason']
-            if json_response['status_code']:
-                response_to_frontend['status_code'] = json_response['status_code']
-            if json_response['id']:
-                response_to_frontend['id'] = json_response['id']
-                Genre.objects.update_or_create(genre_id=json_response['id'], genre_type=json_data['name'])
+            if json_response.status_code == 200:
+                response_to_frontend['status_code'] = json_response.status_code
+                json_object = json_response.json()
+
+                if json_object.get('reason'):
+                    response_to_frontend['message'] = json_object['reason']
+                if json_object.get('id'):
+                    response_to_frontend['id'] = json_object['id']
+                    Genre.objects.update_or_create(genre_id=json_object['id'], genre_type=json_data['name'])
 
         except:
             pass
@@ -267,13 +272,15 @@ def edit_genre(request, genre_id):
                 headers=json_headers
             )
 
-            if json_response['reason']:
-                response_to_frontend['message'] = json_response['reason']
-            if json_response['status_code']:
-                response_to_frontend['status_code'] = json_response['status_code']
-            if json_response['id']:
-                response_to_frontend['id'] = json_response['id']
-                Genre.objects.update_or_create(genre_id=json_data['id'], genre_type=json_data['name'])
+            if json_response.status_code == 200:
+                response_to_frontend['status_code'] = json_response.status_code
+                json_object = json_response.json()
+
+                if json_object.get('reason'):
+                    response_to_frontend['message'] = json_object['reason']
+                if json_object.get('id'):
+                    response_to_frontend['id'] = json_object['id']
+                    Genre.objects.update_or_create(genre_id=json_data['id'], genre_type=json_data['name'])
 
         except:
             pass
