@@ -79,8 +79,9 @@ $(document).on('keyup', '#trackSearch', function() {
         $.ajax({
             url: "search?query=" + query,
         }).done(function(data) {
-            $('#siteloader').empty().html(data['responseText'])
+            $('#siteloader').empty().html(data)
             $('input.rating').rating();
+        }).always(function() {
             $('#loading').hide();
         }).fail(function(jqXHR, textStatus) {
             toastr.error(JSON.parse(jqXHR['responseText'])['message'])
@@ -98,8 +99,9 @@ $('button.search-button').on('click', function() {
         $.ajax({
             url: "search?query=" + query,
         }).done(function(data) {
-            $('#siteloader').empty().html(data['responseText'])
+            $('#siteloader').empty().html(data)
             $('input.rating').rating();
+        }).always(function() {
             $('#loading').hide();
         }).fail(function(jqXHR, textStatus) {
             toastr.error(JSON.parse(jqXHR['responseText'])['message'])
