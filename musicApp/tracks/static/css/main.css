@@ -1,9 +1,42 @@
+.navbar-default {
+    background-image: -webkit-linear-gradient(top, #fff 0, #a8a8a8 100%);
+    background-image: -o-linear-gradient(top, #fff 0, #a8a8a8 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#a8a8a8));
+    background-image: linear-gradient(to bottom, #fff 0, #a8a8a8 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffa8a8a8', GradientType=0);
+    filter: progid: DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 5px rgba(0, 0, 0, .075);
+}
+
+a.navbar-brand {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    font-family: serif;
+    color: rgba(0,0,255,0.65) !important;
+    font-weight: bold;
+}
+
+a.navbar-brand:hover {
+    color: rgba(0,0,255,1) !important;
+}
+
 .navbar-header {
     width: 100%;
+}
+
+.navbar-title {
     justify-content: center;
     margin-left: auto !important;
     margin-right: auto !important;
     display: flex;
+}
+
+.navbar-brand>img {
+    height: 50px;
+    margin-top: -15px;
 }
 
 .add-btn {
@@ -60,4 +93,8 @@ button.btn.track-edit-btn {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+a {
+    cursor: pointer;
 }
