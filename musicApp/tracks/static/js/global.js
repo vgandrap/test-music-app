@@ -4,22 +4,35 @@ function csrfSafeMethod(method) {
 }
 
 function loadTracks(data = 1) {
-    $.get("/track_list/", { "page": data }).done(function(data) {
+    $.ajax({
+        url: "/track_list/",
+        data: { "page": data }
+    }).done(function(data) {
         $('#siteloader').empty();
         $('#siteloader').html(data);
         $('input.rating').rating();
         $('[data-toggle="tooltip"]').tooltip()
         $('#loading').hide();
+        toastr.info("Tracks loaded")
+
+    }).fail(function(jqXHR, textStatus) {
+        toastr.error(JSON.parse(jqXHR['responseText'])['message'])
     });
 }
 
 function loadGenres(data = 1) {
-    $.get("/genre/", { "page": data }).done(function(data) {
+    $.ajax({
+        url: "/genre/",
+        data: { "page": data }
+    }).done(function(data) {
         $('#siteloader').empty();
         $('#siteloader').html(data);
         $('input.rating').rating();
         $('[data-toggle="tooltip"]').tooltip()
         $('#loading').hide();
+        toastr.info("Genres loaded")
+    }).fail(function(jqXHR, textStatus) {
+        toastr.error(JSON.parse(jqXHR['responseText'])['message'])
     });
 }
 
@@ -59,17 +72,18 @@ $(document).on('click', "ul.nav.nav-pills li", function() {
 $(document).on('keyup', '#trackSearch', function() {
     var query = $('#trackSearch').val();
     if (!query) {
-    	loadTracks();
+        $('ul.nav.nav-pills li.track').click();
     } else {
         $('#loading').show();
         $('#siteloader').empty();
         $.ajax({
             url: "search?query=" + query,
-            complete: function(data) {
-                $('#siteloader').empty().html(data['responseText'])
-                $('input.rating').rating();
-                $('#loading').hide();
-            }
+        }).done(function(data) {
+            $('#siteloader').empty().html(data['responseText'])
+            $('input.rating').rating();
+            $('#loading').hide();
+        }).fail(function(jqXHR, textStatus) {
+            toastr.error(JSON.parse(jqXHR['responseText'])['message'])
         });
     }
 });
@@ -77,17 +91,18 @@ $(document).on('keyup', '#trackSearch', function() {
 $('button.search-button').on('click', function() {
     var query = $('#trackSearch').val();
     if (!query) {
-    	loadTracks();
+        $('ul.nav.nav-pills li.track').click();
     } else {
         $('#loading').show();
         $('#siteloader').empty();
         $.ajax({
             url: "search?query=" + query,
-            complete: function(data) {
-                $('#siteloader').empty().html(data['responseText'])
-                $('input.rating').rating();
-                $('#loading').hide();
-            }
+        }).done(function(data) {
+            $('#siteloader').empty().html(data['responseText'])
+            $('input.rating').rating();
+            $('#loading').hide();
+        }).fail(function(jqXHR, textStatus) {
+            toastr.error(JSON.parse(jqXHR['responseText'])['message'])
         });
     }
 });
@@ -99,7 +114,9 @@ $('#tracks_modal').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget)
     var recipient = button.data('track-id')
     if (button.hasClass('track-edit-btn')) {
-        $.get("/" + recipient + "/").done(function(data) {
+        $.ajax({
+            url: "/" + recipient + "/"
+        }).done(function(data) {
             modal.find('#track-id').val(data['track_id']).attr('value', data['track_id'])
             modal.find('#track-title').val(data['title']).attr('value', data['title'])
             modal.find('#track-rating').val(data['rating']).attr('value', data['rating'])
@@ -107,6 +124,8 @@ $('#tracks_modal').on('show.bs.modal', function(event) {
                 $('select#track-genre option[value=' + item["genre_id"] + ']').prop("selected", "selected");
             });
             $('select#track-genre').attr('value', $('select#track-genre').val());
+        }).fail(function(jqXHR, textStatus) {
+            toastr.error(JSON.parse(jqXHR['responseText'])['message'])
         });
     }
 })
@@ -117,9 +136,13 @@ $('#genres_modal').on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget)
     var recipient = button.data('genre-id')
     if (button.hasClass('genre-edit-btn')) {
-        $.get("/genre/" + recipient + "/").done(function(data) {
+        $.ajax({
+            url: "/genre/" + recipient + "/"
+        }).done(function(data) {
             modal.find('#genre-id').val(data['genre_id']).attr('value', data['genre_id'])
             modal.find('#genre-label').val(data['title']).attr('value', data['title'])
+        }).fail(function(jqXHR, textStatus) {
+            toastr.error(JSON.parse(jqXHR['responseText'])['message'])
         });
     }
 })
@@ -160,6 +183,15 @@ $("form.tracks").submit(function(e) {
         url: ajax_url,
         type: 'POST',
         data: JSON.stringify(data), // data to be submitted
+    }).done(function(data) {
+        $("#tracks_modal").modal('toggle');
+        if ($('#track-id').val() != 0) {
+            toastr.success("The track has been successfully changed")
+        } else {
+            toastr.success("Track successfully added");
+        }
+    }).fail(function(jqXHR, textStatus) {
+        toastr.error(JSON.parse(jqXHR['responseText'])['message'])
     });
     return false;
 });
@@ -191,6 +223,15 @@ $("form.genres").submit(function(e) {
         url: ajax_url,
         type: 'POST',
         data: data, // data to be submitted
+    }).done(function(data) {
+        $("#genres_modal").modal('toggle');
+        if ($('#genre-id').val() != 0) {
+            toastr.success("The genre has been successfully changed")
+        } else {
+            toastr.success("Genre successfully added");
+        }
+    }).fail(function(jqXHR, textStatus) {
+        toastr.error(JSON.parse(jqXHR['responseText'])['message'])
     });
     return false;
 });

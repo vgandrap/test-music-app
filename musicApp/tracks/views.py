@@ -8,32 +8,51 @@ import json
 
 
 def home(request):
-    get_genres()
-    get_tracks()
-    track_list = Track.objects.all()
-    genre_list = Genre.objects.all()
+    status = 500
+    response_to_frontend = {'message': 'Error Loading the page details'}
+    try:
+        get_genres()
+        get_tracks()
+        track_list = Track.objects.all()
+        genre_list = Genre.objects.all()
 
-    return render(request, 'tracks/content_page.html', {'genre_list': genre_list, 'track_list': track_list})
+        return render(request, 'tracks/content_page.html', {'genre_list': genre_list, 'track_list': track_list})
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def tracks_list(request):
-    track_list = Track.objects.all()
-    paginator = Paginator(track_list, 10)
-    page = request.GET.get('page', 1)
-
+    status = 500
+    response_to_frontend = {'message': 'Cound not load tracks'}
     try:
-        tracks = paginator.page(page)
-    except PageNotAnInteger:
-        tracks = paginator.page(1)
-    except EmptyPage:
-        tracks = paginator.page(paginator.num_pages)
+        track_list = Track.objects.all()
+        paginator = Paginator(track_list, 10)
+        page = request.GET.get('page', 1)
 
-    return render(request, 'tracks/track_list.html', {'tracks': tracks})
+        try:
+            tracks = paginator.page(page)
+        except PageNotAnInteger:
+            tracks = paginator.page(1)
+        except EmptyPage:
+            tracks = paginator.page(paginator.num_pages)
+
+        return render(request, 'tracks/track_list.html', {'tracks': tracks})
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def add_track(request):
+    status = 500
     if request.POST:
-        response_to_frontend = {'message': 'Update failed'}
+        response_to_frontend = {'message': 'Unable to add track'}
         parameters = {}
 
         for item in request.POST:
@@ -57,12 +76,14 @@ def add_track(request):
                 headers=json_headers
             )
 
+            status = json_response.status_code
+            json_object = json_response.json()
+            if json_object.get('reason'):
+                response_to_frontend['message'] = json_object['reason']
+            else:
+                response_to_frontend['message'] = json_object['rating']
             if json_response.status_code == 200:
                 response_to_frontend['status_code'] = json_response.status_code
-                json_object = json_response.json()
-
-                if json_object.get('reason'):
-                    response_to_frontend['message'] = json_object['reason']
                 if json_object.get('id'):
                     response_to_frontend['id'] = json_object['id']
                     obj, created = Track.objects.update_or_create(title_id=json_object['id'], title=json_data['title'],
@@ -76,7 +97,7 @@ def add_track(request):
 
         return HttpResponse(
             json.dumps(response_to_frontend),
-            status=200,
+            status=status,
             content_type='application/json'
         )
 
@@ -84,55 +105,74 @@ def add_track(request):
 
 
 def track_search(request):
-    query = urllib.quote(request.GET.get('query').encode('utf8'))
-
-    search_url = 'http://104.197.128.152:8000/v1/tracks?title=' + query
-
-    r = requests.get(search_url)
-    results = r.json()
-
-    track_results = []
-
-    for song in results['results']:
-        obj = {'title_id': song['id'], 'title': song['title'], 'rating': song['rating'], 'genre': []}
-        if song['genres']:
-            for genre_item in song['genres']:
-                g = {'genre_id': genre_item['id'], 'genre_type': genre_item['name']}
-                obj['genre'].append(g)
-        track_results.append(obj)
-
-    if results['next']:
-        get_tracks(results['next'])
-
-    paginator = Paginator(track_results, 10)
-    page = request.GET.get('page', 1)
-
+    status = 500
+    response_to_frontend = {'message': 'Could not find tracks matching the query'}
     try:
-        tracks = paginator.page(page)
-    except PageNotAnInteger:
-        tracks = paginator.page(1)
-    except EmptyPage:
-        tracks = paginator.page(paginator.num_pages)
+        query = urllib.quote(request.GET.get('query').encode('utf8'))
 
-    return render(request, 'tracks/modal/search_result_modal.html', {'search_results': tracks})
+        search_url = 'http://104.197.128.152:8000/v1/tracks?title=' + query
+
+        r = requests.get(search_url)
+        results = r.json()
+
+        track_results = []
+
+        for song in results['results']:
+            obj = {'title_id': song['id'], 'title': song['title'], 'rating': song['rating'], 'genre': []}
+            if song['genres']:
+                for genre_item in song['genres']:
+                    g = {'genre_id': genre_item['id'], 'genre_type': genre_item['name']}
+                    obj['genre'].append(g)
+            track_results.append(obj)
+
+        if results['next']:
+            get_tracks(results['next'])
+
+        paginator = Paginator(track_results, 10)
+        page = request.GET.get('page', 1)
+
+        try:
+            tracks = paginator.page(page)
+        except PageNotAnInteger:
+            tracks = paginator.page(1)
+        except EmptyPage:
+            tracks = paginator.page(paginator.num_pages)
+
+        return render(request, 'tracks/modal/search_result_modal.html', {'search_results': tracks})
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def this_track(request, track_id):
-    track_object = Track.objects.get(title_id=track_id)
-    track_details = {'track_id': track_object.title_id, 'title': track_object.title, 'rating': track_object.rating}
-    genres = []
-    for g_item in track_object.genre.all():
-        g = {'genre_title': g_item.genre_type, 'genre_id': g_item.genre_id}
-        genres.append(g)
+    status = 500
+    response_to_frontend = {'message': 'Could not find specified track details'}
+    try:
+        track_object = Track.objects.get(title_id=track_id)
+        track_details = {'track_id': track_object.title_id, 'title': track_object.title, 'rating': track_object.rating}
+        genres = []
+        for g_item in track_object.genre.all():
+            g = {'genre_title': g_item.genre_type, 'genre_id': g_item.genre_id}
+            genres.append(g)
 
-    track_details['genre'] = genres
+        track_details['genre'] = genres
 
-    return JsonResponse(track_details)
+        return JsonResponse(track_details)
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def edit_track(request, track_id):
+    status = 500
     if request.POST:
-        response_to_frontend = {'message': 'Update failed'}
+        response_to_frontend = {'message': 'Could not edit track'}
         parameters = {}
 
         for item in request.POST:
@@ -157,12 +197,15 @@ def edit_track(request, track_id):
                 headers=json_headers
             )
 
+            status = json_response.status_code
+            json_object = json_response.json()
+            if json_object.get('reason'):
+                response_to_frontend['message'] = json_object['reason']
+            else:
+                response_to_frontend['message'] = json_object['rating']
             if json_response.status_code == 200:
                 response_to_frontend['status_code'] = json_response.status_code
-                json_object = json_response.json()
 
-                if json_object.get('reason'):
-                    response_to_frontend['message'] = json_object['reason']
                 if json_object.get('id'):
                     response_to_frontend['id'] = json_object['id']
                     obj, created = Track.objects.update_or_create(title_id=json_data['id'], title=json_data['title'],
@@ -176,7 +219,7 @@ def edit_track(request, track_id):
 
         return HttpResponse(
             json.dumps(response_to_frontend),
-            status=200,
+            status=status,
             content_type='application/json'
         )
 
@@ -184,23 +227,33 @@ def edit_track(request, track_id):
 
 
 def genres_list(request):
-    genre_list = Genre.objects.all()
-    paginator = Paginator(genre_list, 10)
-    page = request.GET.get('page', 1)
-
+    status = 500
+    response_to_frontend = {'message': 'Unable to load all genres'}
     try:
-        genres = paginator.page(page)
-    except PageNotAnInteger:
-        genres = paginator.page(1)
-    except EmptyPage:
-        genres = paginator.page(paginator.num_pages)
+        genre_list = Genre.objects.all()
+        paginator = Paginator(genre_list, 10)
+        page = request.GET.get('page', 1)
 
-    return render(request, 'tracks/genre_list.html', {'genres': genres})
+        try:
+            genres = paginator.page(page)
+        except PageNotAnInteger:
+            genres = paginator.page(1)
+        except EmptyPage:
+            genres = paginator.page(paginator.num_pages)
+
+        return render(request, 'tracks/genre_list.html', {'genres': genres})
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def add_genre(request):
+    status = 500
     if request.POST:
-        response_to_frontend = {'message': 'Update failed'}
+        response_to_frontend = {'message': 'Unable to add genre'}
         parameters = {}
 
         for item in request.POST:
@@ -221,12 +274,13 @@ def add_genre(request):
                 headers=json_headers
             )
 
+            status = json_response.status_code
+            json_object = json_response.json()
+            if json_object.get('reason'):
+                response_to_frontend['message'] = json_object['reason']
             if json_response.status_code == 200:
                 response_to_frontend['status_code'] = json_response.status_code
-                json_object = json_response.json()
 
-                if json_object.get('reason'):
-                    response_to_frontend['message'] = json_object['reason']
                 if json_object.get('id'):
                     response_to_frontend['id'] = json_object['id']
                     Genre.objects.update_or_create(genre_id=json_object['id'], genre_type=json_data['name'])
@@ -236,7 +290,7 @@ def add_genre(request):
 
         return HttpResponse(
             json.dumps(response_to_frontend),
-            status=200,
+            status=status,
             content_type='application/json'
         )
 
@@ -244,14 +298,24 @@ def add_genre(request):
 
 
 def this_genre(request, genre_id):
-    genre_object = Genre.objects.get(genre_id=genre_id)
-    genre_details = {'genre_id': genre_object.genre_id, 'title': genre_object.genre_type}
-    return JsonResponse(genre_details)
+    status = 500
+    response_to_frontend = {'message': 'Could not find specified track details'}
+    try:
+        genre_object = Genre.objects.get(genre_id=genre_id)
+        genre_details = {'genre_id': genre_object.genre_id, 'title': genre_object.genre_type}
+        return JsonResponse(genre_details)
+    except:
+        return HttpResponse(
+            json.dumps(response_to_frontend),
+            status=status,
+            content_type='application/json'
+        )
 
 
 def edit_genre(request, genre_id):
+    status = 500
     if request.POST:
-        response_to_frontend = {'message': 'Update failed'}
+        response_to_frontend = {'message': 'Could not edit genre'}
         parameters = {}
 
         for item in request.POST:
@@ -272,12 +336,13 @@ def edit_genre(request, genre_id):
                 headers=json_headers
             )
 
+            status = json_response.status_code
+            json_object = json_response.json()
+            if json_object.get('reason'):
+                response_to_frontend['message'] = json_object['reason']
             if json_response.status_code == 200:
                 response_to_frontend['status_code'] = json_response.status_code
-                json_object = json_response.json()
 
-                if json_object.get('reason'):
-                    response_to_frontend['message'] = json_object['reason']
                 if json_object.get('id'):
                     response_to_frontend['id'] = json_object['id']
                     Genre.objects.update_or_create(genre_id=json_data['id'], genre_type=json_data['name'])
@@ -287,7 +352,7 @@ def edit_genre(request, genre_id):
 
         return HttpResponse(
             json.dumps(response_to_frontend),
-            status=200,
+            status=status,
             content_type='application/json'
         )
 
