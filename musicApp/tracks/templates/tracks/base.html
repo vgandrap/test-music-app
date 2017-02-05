@@ -23,11 +23,13 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <!-- Star Rating -->
     <link href="{% static 'rating/css/star-rating.min.css' %}" rel="stylesheet" />
+    <!-- Toastr -->
+    <link href="{% static 'toastr/css/toastr.min.css' %}" rel="stylesheet" />
 </head>
 
 <body>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{% static 'jQuery 1.12.4/jquery.min.js' %}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <!-- Latest compiled and minified bootstrap JavaScript -->
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
@@ -42,7 +44,9 @@
     <script src="{% static 'js/global.js' %}"></script>
     <!-- Star Rating -->
     <script src="{% static 'rating/js/star-rating.min.js' %}"></script>
-    {% block inline_js %} 
+    <!-- Toastr -->
+    <script src="{% static 'toastr/js/toastr.min.js' %}"></script>
+    {% block inline_js %}
     {% endblock %}
 </body>
 
