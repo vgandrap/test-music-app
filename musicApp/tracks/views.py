@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Genre, Track
+from .decorators import run_once
 import urllib
 import json
 
@@ -11,12 +12,7 @@ def home(request):
     status = 500
     response_to_frontend = {'message': 'Error Loading the page details'}
     try:
-        get_genres()
-        get_tracks()
-        track_list = Track.objects.all()
-        genre_list = Genre.objects.all()
-
-        return render(request, 'tracks/content_page.html', {'genre_list': genre_list, 'track_list': track_list})
+        return render(request, 'tracks/content_page.html')
     except:
         return HttpResponse(
             json.dumps(response_to_frontend),
@@ -29,6 +25,7 @@ def tracks_list(request):
     status = 500
     response_to_frontend = {'message': 'Cound not load tracks'}
     try:
+        get_tracks()
         track_list = Track.objects.all()
         paginator = Paginator(track_list, 10)
         page = request.GET.get('page', 1)
@@ -230,6 +227,7 @@ def genres_list(request):
     status = 500
     response_to_frontend = {'message': 'Unable to load all genres'}
     try:
+        get_genres()
         genre_list = Genre.objects.all()
         paginator = Paginator(genre_list, 10)
         page = request.GET.get('page', 1)
@@ -359,6 +357,7 @@ def edit_genre(request, genre_id):
     return
 
 
+@run_once
 def get_genres(url='http://104.197.128.152:8000/v1/genres'):
     r = requests.get(url)
     genres = r.json()
@@ -370,6 +369,7 @@ def get_genres(url='http://104.197.128.152:8000/v1/genres'):
         get_genres(genres['next'])
 
 
+@run_once
 def get_tracks(url='http://104.197.128.152:8000/v1/tracks'):
     r = requests.get(url)
     songs = r.json()
