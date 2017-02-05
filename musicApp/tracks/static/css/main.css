@@ -7,16 +7,16 @@
 }
 
 .add-btn {
-	height: 40px !important;
+    height: 40px !important;
 }
 
 .btn-block + .btn-block {
-     margin-top: 0px !important; 
+    margin-top: 0px !important;
 }
 
 ul.list-group.track-list:after {
-  clear: both;
-  display: block;
+    clear: both;
+    display: block;
 }
 
 .list-group-item.track-list {
@@ -47,4 +47,17 @@ button.btn.track-edit-btn {
     text-transform: uppercase;
     font-size: 1em;
     margin-top: 5px;
+}
+
+.result-count {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 5px 15px;
+    color: blue;
+}
+
+.loading img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

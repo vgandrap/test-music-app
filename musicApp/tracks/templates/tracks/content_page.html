@@ -1,4 +1,6 @@
-{% extends 'tracks/base.html' %} {% load staticfiles %} {% block content %}
+{% extends 'tracks/base.html' %}
+{% load staticfiles %}
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-xs-1">
@@ -17,7 +19,11 @@
     <hr/> {% include 'tracks/search_bar.html' %}
     <hr/>
     <div id="siteloader" class="content"></div>
+    <div class="loading" id="loading">
+        <img src="{% static 'img/loading-circle.gif' %}">
+    </div>
 </div>
+
 {% endblock %} 
 {% block inline_js %}
 {% endblock %}

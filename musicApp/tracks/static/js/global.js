@@ -5,44 +5,90 @@ function csrfSafeMethod(method) {
 
 function loadTracks(data = 1) {
     $.get("/track_list/", { "page": data }).done(function(data) {
+        $('#siteloader').empty();
         $('#siteloader').html(data);
         $('input.rating').rating();
         $('[data-toggle="tooltip"]').tooltip()
+        $('#loading').hide();
     });
 }
 
 function loadGenres(data = 1) {
     $.get("/genre/", { "page": data }).done(function(data) {
+        $('#siteloader').empty();
         $('#siteloader').html(data);
         $('input.rating').rating();
         $('[data-toggle="tooltip"]').tooltip()
+        $('#loading').hide();
     });
 }
 
 $(document).on('click', 'span.track-paginate', function() {
+    $('#loading').show();
     $('#siteloader').empty();
     loadTracks($(this).data('href'));
 });
 
 $(document).on('click', 'span.genre-paginate', function() {
+    $('#loading').show();
     $('#siteloader').empty();
     loadGenres($(this).data('href'));
 });
 
 $(document).on('click', "ul.nav.nav-pills li", function() {
-    $("ul.nav.nav-pills li").each(function() {
-        $(this).toggleClass("active");
-    });
-    $("button.genre_track_btn").each(function() {
-        $(this).toggleClass("hidden");
-        $(this).toggleClass("invisible");
-        $(this).toggleClass("show");
-    });
+    if (!$(this).hasClass("active")) {
+        $("ul.nav.nav-pills li").each(function() {
+            $(this).toggleClass("active");
+        });
+        $("button.genre_track_btn").each(function() {
+            $(this).toggleClass("hidden");
+            $(this).toggleClass("invisible");
+            $(this).toggleClass("show");
+        });
+    }
+    $('#trackSearch').val('')
+    $('#loading').show();
     $('#siteloader').empty();
     if ($(this).hasClass('genre')) {
         loadGenres();
     } else {
         loadTracks();
+    }
+});
+
+$(document).on('keyup', '#trackSearch', function() {
+    var query = $('#trackSearch').val();
+    if (!query) {
+    	loadTracks();
+    } else {
+        $('#loading').show();
+        $('#siteloader').empty();
+        $.ajax({
+            url: "search?query=" + query,
+            complete: function(data) {
+                $('#siteloader').empty().html(data['responseText'])
+                $('input.rating').rating();
+                $('#loading').hide();
+            }
+        });
+    }
+});
+
+$('button.search-button').on('click', function() {
+    var query = $('#trackSearch').val();
+    if (!query) {
+    	loadTracks();
+    } else {
+        $('#loading').show();
+        $('#siteloader').empty();
+        $.ajax({
+            url: "search?query=" + query,
+            complete: function(data) {
+                $('#siteloader').empty().html(data['responseText'])
+                $('input.rating').rating();
+                $('#loading').hide();
+            }
+        });
     }
 });
 
@@ -127,7 +173,7 @@ $("form.genres").submit(function(e) {
     if ($('#genre-id').val() != 0) {
         data['genre_id'] = $('#genre-id').val();
         JSON.stringify(data);
-		ajax_url = '/genre/' + $('#genre-id').val() + '/edit';
+        ajax_url = '/genre/' + $('#genre-id').val() + '/edit';
     } else {
         ajax_url = '/genre/add';
     }

@@ -1,122 +1,110 @@
-<div class="modal fade" id="search_result_modal" tabindex="-1" role="dialog" aria-labelledby="search_result_label">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="search_result_label">Search Result</h4>
-            </div>
-            <div class="modal-body">
-                <div class="panel-group" id="accordion" role="tablist">
-                    {% for track in search_results %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
-                            <h4 class="panel-title track-title">
-                                {{ track.title }}
-                            </h4>
+<div class="result-count">
+    {{ search_results.paginator.count }} results found
+</div>
+<div class="panel-group" id="accordion" role="tablist">
+    {% for track in search_results %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
+            <h4 class="panel-title track-title">
+                {{ track.title }}
+            </h4>
+        </div>
+        <div id="collapse{{ forloop.counter0 }}" class="panel-collapse collapse {% if forloop.counter == 1 %}in{% endif %}" role="tabpanel">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8 col-xs-16">
+                        <div class="row">
+                            <div class="col-md-2 col-xs-2">
+                                Genre
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <ul class="list-group track-list">
+                                    {% for gen in track.genre %}
+                                    <li class="list-group-item track-list">{{ gen.genre_type }}</li>
+                                    {% empty %}
+                                    <li class="list-group-item track-list">Sorry, no genres assigned.</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
-                        <div id="collapse{{ forloop.counter0 }}" class="panel-collapse collapse {% if forloop.counter == 1 %}in{% endif %}" role="tabpanel">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-8 col-xs-16">
-                                        <div class="row">
-                                            <div class="col-md-2 col-xs-2">
-                                                Genre
-                                            </div>
-                                            <div class="col-md-10 col-xs-10">
-                                                <ul class="list-group track-list">
-                                                    {% for gen in track.genre %}
-                                                    <li class="list-group-item track-list">{{ gen.genre_type }}</li>
-                                                    {% empty %}
-                                                    <li class="list-group-item track-list">Sorry, no genres assigned.</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-2 col-xs-2 rating-title">
-                                                Rating
-                                            </div>
-                                            <div class="col-md-10 col-xs-10">
-                                                <ul class="list-group" style="margin-bottom: 0; box-shadow: none; -webkit-box-shadow: none;">
-                                                    <li class="list-group-item" data-toggle="tooltip" data-placement="right" title="{{ track.rating }}" style="padding: 5px 5px 0; border: 0px; border-bottom: 0; width: 200px;">
-                                                        <input type="number" name="rating-input-{{ forloop.counter }}" id="rating-input-{{ forloop.counter }}" value="{{ track.rating }}" data-min="0" data-max="10" data-step="0.2" data-size='xs' data-display-only="true" class="rating">
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-xs-16">
-                                        <div class="row">
-                                            <div class="col-md-4 col-xs-2">
-                                            </div>
-                                            <div class="col-md-8 col-xs-12">
-                                                <button id="track_edit_{{ track.title_id }}" class="btn btn-block btn-warning track-edit-btn" type="button" data-dismiss="modal" data-toggle="modal" data-target="#tracks_modal" data-track-id="{{ track.title_id }}">Edit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-2 col-xs-2 rating-title">
+                                Rating
+                            </div>
+                            <div class="col-md-10 col-xs-10">
+                                <ul class="list-group" style="margin-bottom: 0; box-shadow: none; -webkit-box-shadow: none;">
+                                    <li class="list-group-item" data-toggle="tooltip" data-placement="right" title="{{ track.rating }}" style="padding: 5px 5px 0; border: 0px; border-bottom: 0; width: 200px;">
+                                        <input type="number" name="rating-input-{{ forloop.counter }}" id="rating-input-{{ forloop.counter }}" value="{{ track.rating }}" data-min="0" data-max="10" data-step="0.2" data-size='xs' data-display-only="true" class="rating">
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    {% empty %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
-                            <h4 class="panel-title track-title">
-                                No tracks found
-                            </h4>
+                    <div class="col-md-4 col-xs-16">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-2">
+                            </div>
+                            <div class="col-md-8 col-xs-12">
+                                <button id="track_edit_{{ track.title_id }}" class="btn btn-block btn-warning track-edit-btn" type="button" data-dismiss="modal" data-toggle="modal" data-target="#tracks_modal" data-track-id="{{ track.title_id }}">Edit</button>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <!-- Pagination -->
-                <div class="row">
-                    <div class="col-md-12 col-xs-16">
-                        <nav aria-label="Page navigation">
-                            {% if search_results.has_other_pages %}
-                            <ul class="pagination">
-                                {% if search_results.has_previous %}
-                                <li>
-                                    <span class="track-paginate" data-href="{{ search_results.previous_page_number }}" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </span>
-                                </li>
-                                {% else %}
-                                <li class="disabled">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </li>
-                                {% endif %} 
-                                {% for i in search_results.paginator.page_range %} 
-                                {% if search_results.number == i %}
-                                <li class="active">
-                                    <span>
-                                        {{ i }}
-                                        <span class="sr-only">(current)</span>
-                                    </span>
-                                </li>
-                                {% else %}
-                                <li>
-                                    <span class="track-paginate" data-href="{{ i }}">{{ i }}</span>
-                                </li>
-                                {% endif %} {% endfor %} {% if search_results.has_next %}
-                                <li>
-                                    <span class="track-paginate" data-href="{{ search_results.next_page_number }}" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </span>
-                                </li>
-                                {% else %}
-                                <li class="disabled">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </li>
-                                {% endif %}
-                            </ul>
-                            {% endif %}
-                        </nav>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
+    {% empty %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="button" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter0 }}">
+            <h4 class="panel-title track-title">
+                No tracks found
+            </h4>
+        </div>
+    </div>
+    {% endfor %}
 </div>
-<!-- /.modal -->
+<!-- Pagination -->
+<div class="row">
+    <div class="col-md-12 col-xs-16">
+        <nav aria-label="Page navigation">
+            {% if search_results.has_other_pages %}
+            <ul class="pagination">
+                {% if search_results.has_previous %}
+                <li>
+                    <span class="track-paginate" data-href="{{ search_results.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&laquo;</span>
+                </li>
+                {% endif %} 
+                {% for i in search_results.paginator.page_range %} 
+                {% if search_results.number == i %}
+                <li class="active">
+                    <span>
+                        {{ i }}
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                {% else %}
+                <li>
+                    <span class="track-paginate" data-href="{{ i }}">{{ i }}</span>
+                </li>
+                {% endif %} {% endfor %} {% if search_results.has_next %}
+                <li>
+                    <span class="track-paginate" data-href="{{ search_results.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">&raquo;</span>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </nav>
+    </div>
+</div>

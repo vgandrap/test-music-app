@@ -34,33 +34,14 @@
     <!-- Modals -->
     {% include 'tracks/modal/track_modal.html' %}
     {% include 'tracks/modal/genre_modal.html' %}
-    <div class="search_container">
-        {% include 'tracks/modal/search_result_modal.html' %}
-    </div>
     <!-- Navbar -->
-    {% include 'tracks/navbar.html' %} 
-    {% block content %} 
+    {% include 'tracks/navbar.html' %}
+    {% block content %}
     {% endblock %}
     <!-- Custom JS -->
     <script src="{% static 'js/global.js' %}"></script>
     <!-- Star Rating -->
     <script src="{% static 'rating/js/star-rating.min.js' %}"></script>
-    <script type="text/javascript">
-    $('button.search-button').on('click', function() {
-        var button = $(this);
-        query = button.parent().siblings('input').val();
-        if (!query) {
-            alert('Search String cannot be empty');
-        } else {
-            $('.search_container').empty().load("{% url 'track_search' %}?query=" + query, function(){
-	            $('#search_result_modal').modal()
-    	        $('input.rating').rating();
-            });
-
-            // });
-        }
-    });
-    </script>
     {% block inline_js %} 
     {% endblock %}
 </body>
