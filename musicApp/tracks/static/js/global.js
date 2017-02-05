@@ -125,8 +125,9 @@ $("form.genres").submit(function(e) {
         genre_type: $('#genre-label').val(),
     }
     if ($('#genre-id').val() != 0) {
-        data['genre_id'] = $('#genre-id').val(),
-            ajax_url = '/genre/' + $('#genre-id').val() + '/edit';
+        data['genre_id'] = $('#genre-id').val();
+        JSON.stringify(data);
+		ajax_url = '/genre/' + $('#genre-id').val() + '/edit';
     } else {
         ajax_url = '/genre/add';
     }
@@ -143,7 +144,7 @@ $("form.genres").submit(function(e) {
     $.ajax({
         url: ajax_url,
         type: 'POST',
-        data: JSON.stringify(data), // data to be submitted
+        data: data, // data to be submitted
     });
     return false;
 });

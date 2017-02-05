@@ -8,7 +8,7 @@ import json
 
 
 def home(request):
-    # get_genres()
+    get_genres()
     get_tracks()
     track_list = Track.objects.all()
     genre_list = Genre.objects.all()
@@ -209,7 +209,7 @@ def add_genre(request):
             except:
                 pass
 
-        json_data = {'name': parameters['track_title']}
+        json_data = {'name': parameters['genre_type']}
 
         api_url_path = 'http://104.197.128.152:8000/v1/genres'
 
